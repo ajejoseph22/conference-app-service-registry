@@ -42,6 +42,7 @@ class ServiceRegisty {
       service =>
         service.name === name && semver.satisfies(service.version, version)
     );
+    //LOAD BALANCING
     return candidates[Math.floor(Math.random() * candidates.length)];
   };
 }

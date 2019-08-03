@@ -49,17 +49,14 @@ module.exports = config => {
     }
   );
 
-  service.get(
-    "/find/:serviceName/:serviceVersion",
-    (req, res) => {
-      const { serviceName, serviceVersion } = req.params;
-      const theService = serviceRegistry.query(
-        serviceName,
-        serviceVersion
-      );
-      res.json({ result: theService });
+  service.get("/find/:serviceName/:serviceVersion", (req, res) => {
+    const { serviceName, serviceVersion } = req.params;
+    const theService = serviceRegistry.query(serviceName, serviceVersion);
+    if (!theService) {
+      return res.status(404).json({ result: "Not Found" });
     }
-  );
+    res.json({ result: theService });
+  });
 
   // eslint-disable-next-line no-unused-vars
   service.use((error, req, res, next) => {
