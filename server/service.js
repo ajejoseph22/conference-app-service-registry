@@ -50,17 +50,12 @@ module.exports = config => {
   );
 
   service.get(
-    "/find/:serviceName/:serviceVersion/:servicePort",
-    (req, res, next) => {
-      const { serviceName, serviceVersion, servicePort } = req.params;
-      const serviceIp = req.connection.remoteAddress.includes("::")
-        ? `[${req.connection.remoteAddress}]`
-        : req.connection.remoteAddress;
+    "/find/:serviceName/:serviceVersion",
+    (req, res) => {
+      const { serviceName, serviceVersion } = req.params;
       const theService = serviceRegistry.query(
         serviceName,
-        serviceVersion,
-        serviceIp,
-        servicePort
+        serviceVersion
       );
       res.json({ result: theService });
     }

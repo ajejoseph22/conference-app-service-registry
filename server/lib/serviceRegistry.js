@@ -1,3 +1,5 @@
+const semver = require("semver");
+
 class ServiceRegisty {
   constructor(log) {
     this.log = log;
@@ -35,9 +37,12 @@ class ServiceRegisty {
     return key;
   };
 
-  query = (name, version, ip, port) => {
-    const key = `${name}${version}${ip}${port}`;
-    return this.services[key];
+  query = (name, version) => {
+    const candidates = Object.values(this.services).filter(
+      service =>
+        service.name === name && semver.satisfies(service.version, version)
+    );
+    return candidates[Math.floor(Math.random() * candidates.length)];
   };
 }
 
