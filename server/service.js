@@ -17,7 +17,7 @@ module.exports = config => {
 
   service.put(
     "/register/:serviceName/:serviceVersion/:servicePort",
-    (req, res, next) => {
+    (req, res) => {
       const { serviceName, serviceVersion, servicePort } = req.params;
       const serviceIp = req.connection.remoteAddress.includes("::")
         ? `[${req.connection.remoteAddress}]`
@@ -33,16 +33,36 @@ module.exports = config => {
   );
 
   service.delete(
-    "/register/:serviceName/:serviceVersion/:servivePort",
+    "/register/:serviceName/:serviceVersion/:servicePort",
     (req, res, next) => {
-      return next("not implemented");
+      const { serviceName, serviceVersion, servicePort } = req.params;
+      const serviceIp = req.connection.remoteAddress.includes("::")
+        ? `[${req.connection.remoteAddress}]`
+        : req.connection.remoteAddress;
+      const serviceKey = serviceRegistry.unregister(
+        serviceName,
+        serviceVersion,
+        serviceIp,
+        servicePort
+      );
+      res.json({ result: serviceKey });
     }
   );
 
   service.get(
-    "/find/:serviceName/:serviceVersion/:servivePort",
+    "/find/:serviceName/:serviceVersion/:servicePort",
     (req, res, next) => {
-      return next("not implemented");
+      const { serviceName, serviceVersion, servicePort } = req.params;
+      const serviceIp = req.connection.remoteAddress.includes("::")
+        ? `[${req.connection.remoteAddress}]`
+        : req.connection.remoteAddress;
+      const theService = serviceRegistry.query(
+        serviceName,
+        serviceVersion,
+        serviceIp,
+        servicePort
+      );
+      res.json({ result: theService });
     }
   );
 
